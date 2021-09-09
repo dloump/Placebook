@@ -18,7 +18,6 @@ import com.raywenderlich.placebook.databinding.ActivityMapsBinding
 class MapsActivity : AppCompatActivity(), OnMapReadyCallback {
 
     private lateinit var map: GoogleMap
-    private var locationRequest: LocationRequest? = null
     private lateinit var mMap: GoogleMap
     private lateinit var fusedLocationClient:
             FusedLocationProviderClient
@@ -72,27 +71,7 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback {
             //if not granted permission
             requestLocationPermissions()
         } else {
-            if (locationRequest == null) {
-                locationRequest = LocationRequest.create()
-                locationRequest?.let { locationRequest ->
-                    //setting guid to how accurate locations should be
-                    locationRequest.priority =
-                        LocationRequest.PRIORITY_HIGH_ACCURACY
-                    //specifying desired interval in milliseconds to return updates
-                    locationRequest.interval = 5000
-                    //setting shortest interval app is capable of handling
-                    locationRequest.fastestInterval = 1000
-                    //updating map to center on new location
-                    val locationCallback = object : LocationCallback() {
-                        override fun onLocationResult(locationResult:
-                                                      LocationResult?) {
-                            getCurrentLocation()
-                        }
-                    }
-                    fusedLocationClient.requestLocationUpdates(locationRequest,
-                        locationCallback, null)
-                }
-            }
+            map.isMyLocationEnabled = true
             //requesting to be notified when location is ready
             fusedLocationClient.lastLocation.addOnCompleteListener {
                 val location = it.result
@@ -100,11 +79,6 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback {
                     //if location is not null, creating object for map location
                     val latLng = LatLng(location.latitude,
                         location.longitude)
-                    //removing previous marker
-                    map.clear()
-                    //creating marker to mark map location
-                    map.addMarker(MarkerOptions().position(latLng)
-                        .title("You are here!"))
                     //creating CameraUpdate object to specify how map camera is updated
                     val update = CameraUpdateFactory.newLatLngZoom(latLng,
                         16.0f)
