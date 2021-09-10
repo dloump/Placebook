@@ -16,10 +16,7 @@ import com.google.android.gms.maps.CameraUpdateFactory
 import com.google.android.gms.maps.GoogleMap
 import com.google.android.gms.maps.OnMapReadyCallback
 import com.google.android.gms.maps.SupportMapFragment
-import com.google.android.gms.maps.model.LatLng
-import com.google.android.gms.maps.model.Marker
-import com.google.android.gms.maps.model.MarkerOptions
-import com.google.android.gms.maps.model.PointOfInterest
+import com.google.android.gms.maps.model.*
 import com.google.android.libraries.places.api.model.Place
 import com.google.android.libraries.places.api.net.FetchPhotoRequest
 import com.google.android.libraries.places.api.net.FetchPlaceRequest
@@ -67,6 +64,7 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback {
     override fun onMapReady(googleMap: GoogleMap) {
         map = googleMap
         setupMapListeners()
+        createBookmarkMarkerObserver()
         getCurrentLocation()
     }
 
@@ -230,6 +228,39 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback {
             }
         }
         marker.remove()
+    }
+
+    //adds single blue marker to map based on a BookmarkMarkerView
+    private fun addPlaceMarker(
+        bookmark: MapsViewModel.BookmarkMarkerView): Marker? {
+        val marker = map.addMarker(MarkerOptions()
+            .position(bookmark.location)
+            .icon(BitmapDescriptorFactory.defaultMarker(
+                BitmapDescriptorFactory.HUE_AZURE))
+            .alpha(0.8f))
+        marker.tag = bookmark
+        return marker
+    }
+
+    //method for displaying all of the bookmark markers
+    private fun displayAllBookmarks(
+        bookmarks: List<MapsViewModel.BookmarkMarkerView>) {
+        bookmarks.forEach { addPlaceMarker(it) }
+    }
+
+    private fun createBookmarkMarkerObserver() {
+        //retrieving a LiveData object, "telling" observer to follow lifecycle
+        //of current activity, & processing updated bookmarks
+        mapsViewModel.getBookmarkMarkerViews()?.observe(
+            this, {
+                //clearing all existing markers from map
+                map.clear()
+                //calling dispayAllBookmarks with list of updated
+                //BookmarkMarkerView objects
+                it?.let {
+                    displayAllBookmarks(it)
+                }
+            })
     }
 
     companion object {
