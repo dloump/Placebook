@@ -1,4 +1,4 @@
-package com.raywenderlich.placebook
+package com.raywenderlich.placebook.ui
 
 import com.google.android.libraries.places.api.Places
 import com.google.android.libraries.places.api.net.PlacesClient
@@ -8,7 +8,6 @@ import android.graphics.Bitmap
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.util.Log
-import android.widget.Toast
 import androidx.core.app.ActivityCompat
 import com.google.android.gms.common.api.ApiException
 import com.google.android.gms.location.*
@@ -16,13 +15,13 @@ import com.google.android.gms.maps.CameraUpdateFactory
 import com.google.android.gms.maps.GoogleMap
 import com.google.android.gms.maps.OnMapReadyCallback
 import com.google.android.gms.maps.SupportMapFragment
-import com.google.android.gms.maps.model.BitmapDescriptorFactory
 import com.google.android.gms.maps.model.LatLng
 import com.google.android.gms.maps.model.MarkerOptions
 import com.google.android.gms.maps.model.PointOfInterest
 import com.google.android.libraries.places.api.model.Place
 import com.google.android.libraries.places.api.net.FetchPhotoRequest
 import com.google.android.libraries.places.api.net.FetchPlaceRequest
+import com.raywenderlich.placebook.R
 import com.raywenderlich.placebook.adapter.BookmarkInfoWindowAdapter
 import com.raywenderlich.placebook.databinding.ActivityMapsBinding
 
@@ -82,7 +81,8 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback {
     private fun requestLocationPermissions() {
         ActivityCompat.requestPermissions(this,
             arrayOf(Manifest.permission.ACCESS_FINE_LOCATION),
-            REQUEST_LOCATION)
+            REQUEST_LOCATION
+        )
     }
 
     private fun getCurrentLocation() {
@@ -151,7 +151,8 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback {
             }.addOnFailureListener { exception ->
                 if (exception is ApiException) {
                     val statusCode = exception.statusCode
-                    Log.e(TAG,
+                    Log.e(
+                        TAG,
                         "Place not found: " +
                                 exception.message + ", " +
                                 "statusCode: " + statusCode)
@@ -172,9 +173,11 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback {
         val photoRequest = FetchPhotoRequest
             .builder(photoMetadata)
             .setMaxWidth(resources.getDimensionPixelSize(
-                R.dimen.default_image_width))
+                R.dimen.default_image_width
+            ))
             .setMaxHeight(resources.getDimensionPixelSize(
-                R.dimen.default_image_height))
+                R.dimen.default_image_height
+            ))
             .build()
         //calling fetchPhoto, if successful, assigning photo to bitmap
         //otherwise checking if API error occurred & logging error
@@ -185,7 +188,8 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback {
             }.addOnFailureListener { exception ->
                 if (exception is ApiException) {
                     val statusCode = exception.statusCode
-                    Log.e(TAG,
+                    Log.e(
+                        TAG,
                         "Place not found: " +
                                 exception.message + ", " +
                                 "statusCode: " + statusCode)
