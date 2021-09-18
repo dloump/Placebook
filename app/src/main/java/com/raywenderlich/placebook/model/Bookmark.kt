@@ -1,5 +1,7 @@
 package com.raywenderlich.placebook.model
 
+import android.content.Context
+import android.graphics.Bitmap
 import androidx.room.Entity
 import androidx.room.PrimaryKey
 
@@ -18,3 +20,21 @@ data class Bookmark(
     var longitude: Double = 0.0,
     var phone: String = ""
 )
+
+{
+    // 1
+    fun setImage(image: Bitmap, context: Context) {
+        // 2
+        id?.let {
+            ImageUtils.saveBitmapToFile(context, image,
+                generateImageFilename(it))
+        }
+    }
+    //3
+    companion object {
+        fun generateImageFilename(id: Long): String {
+            // 4
+            return "bookmark$id.png"
+        }
+    }
+}
