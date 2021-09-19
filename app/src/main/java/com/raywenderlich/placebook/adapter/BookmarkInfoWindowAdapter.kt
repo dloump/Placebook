@@ -11,7 +11,7 @@ import com.raywenderlich.placebook.ui.MapsActivity
 import com.raywenderlich.placebook.viewmodel.MapsViewModel
 
 //declaring single parameter class
-class BookmarkInfoWindowAdapter(context: Activity) :
+class BookmarkInfoWindowAdapter(val context: Activity) :
     GoogleMap.InfoWindowAdapter {
     //initializing variable
     private val binding =
@@ -39,6 +39,7 @@ class BookmarkInfoWindowAdapter(context: Activity) :
                 val bookMarkview = marker.tag as
                         MapsViewModel.BookmarkMarkerView
                 // Set imageView bitmap here
+                imageView.setImageBitmap(bookMarkview.getImage(context))
             }
         }
     }

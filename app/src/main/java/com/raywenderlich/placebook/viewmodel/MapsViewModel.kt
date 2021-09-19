@@ -1,6 +1,7 @@
 package com.raywenderlich.placebook.viewmodel
 
 import android.app.Application
+import android.content.Context
 import android.graphics.Bitmap
 import android.util.Log
 import androidx.lifecycle.AndroidViewModel
@@ -49,7 +50,10 @@ class MapsViewModel(application: Application) :
     private fun bookmarkToMarkerView(bookmark: Bookmark) =
         BookmarkMarkerView(
             bookmark.id,
-            LatLng(bookmark.latitude, bookmark.longitude))
+            LatLng(bookmark.latitude, bookmark.longitude),
+            bookmark.name,
+            bookmark.phone
+        )
 
     private fun mapBookmarksToMarkerView() {
         //dynamically mapping bookmark objects into BookmarkMarkerView objects
@@ -66,6 +70,14 @@ class MapsViewModel(application: Application) :
 
     data class BookmarkMarkerView(
         var id: Long? = null,
-        var location: LatLng = LatLng(0.0, 0.0))
+        var location: LatLng = LatLng(0.0, 0.0),
+        var name: String = "",
+        var phone: String = ""
+    ) {
+        fun getImage(context: Context) = id?.let {
+            ImageUtils.loadBitmapFromFile(context,
+                Bookmark.generateImageFilename(it))
+        }
+    }
 
 }

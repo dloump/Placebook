@@ -27,4 +27,8 @@ class BookmarkRepo(context: Context) {
         get() {
             return bookmarkDao.loadAll()
         }
+
+    fun getLiveBookmark(bookmarkId: Long): LiveData<Bookmark> =
+        bookmarkDao.loadLiveBookmark(bookmarkId)
+
 }
