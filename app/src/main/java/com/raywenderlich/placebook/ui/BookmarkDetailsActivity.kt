@@ -205,8 +205,7 @@ class BookmarkDetailsActivity : AppCompatActivity(),
         val resourceId =
                 bookmarkDetailsViewModel.getCategoryResourceId(bookmarkView.category)
         //if resourceId is not null, updating imageViewCategory to category icon
-        resourceId?.let
-        { databinding.imageViewCategory.setImageResource(it) }
+        resourceId?.let{ databinding.imageViewCategory.setImageResource(it) }
         //retrieving list of categories from view model
         val categories = bookmarkDetailsViewModel.getCategories()
         //creating an adapter & assigning the Adapter to a built-in Layout resource
