@@ -181,6 +181,7 @@ class BookmarkDetailsActivity : AppCompatActivity(),
                             image , uri)
                     updateImage(bitmap)
                 }
+                //
                 REQUEST_GALLERY_IMAGE -> if (data != null && data.data != null)
                 {
                     val imageUri = data.data as Uri
