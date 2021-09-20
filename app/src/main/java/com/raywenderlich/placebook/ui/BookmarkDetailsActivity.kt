@@ -1,15 +1,25 @@
 package com.raywenderlich.placebook.ui
 
+import android.content.Intent
+import android.content.pm.PackageManager
+import android.graphics.Bitmap
+import android.net.Uri
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.provider.MediaStore
 import android.view.MenuItem
+import android.widget.Toast
 import androidx.activity.viewModels
+import androidx.core.content.FileProvider
 import androidx.databinding.DataBindingUtil
 import com.raywenderlich.placebook.R
 import com.raywenderlich.placebook.databinding.ActivityBookmarkDetailsBinding
 import com.raywenderlich.placebook.viewmodel.BookmarkDetailsViewModel
+import java.io.File
 
-class BookmarkDetailsActivity : AppCompatActivity() {
+class BookmarkDetailsActivity : AppCompatActivity(),
+        PhotoOptionDialogFragment.PhotoOptionDialogListener {
+    private var photoFile: File? = null
     private lateinit var databinding:
             ActivityBookmarkDetailsBinding
     private val bookmarkDetailsViewModel by viewModels<BookmarkDetailsViewModel>()
@@ -23,8 +33,60 @@ class BookmarkDetailsActivity : AppCompatActivity() {
         setupToolbar()
         getIntentData()
     }
+
     private fun setupToolbar() {
         setSupportActionBar(databinding.toolbar)
+    }
+
+    override fun onCaptureClick() {
+        //clearing previously assigned photofiles
+        photoFile = null
+        try {
+            //creating uniquely named imagefile & assigning it to photofile
+            photoFile = ImageUtils.createUniqueImageFile(this)
+        } catch (ex: java.io.IOException) {
+            //if an exception is thrown, method returns after doing nothing
+            return
+        }
+        //making sure photoFile is not null before continuing with the method
+        photoFile?.let { photoFile ->
+            //getting a Uri for the temporary photo file
+            val photoUri = FileProvider.getUriForFile(this,
+                    "com.raywenderlich.placebook.fileprovider",
+                    photoFile)
+            //creating new Intent
+            val captureIntent =
+                    Intent(MediaStore.ACTION_IMAGE_CAPTURE)
+            //letting Intent know where to save the full-size image captured by User
+            captureIntent.putExtra(android.provider.MediaStore.EXTRA_OUTPUT,
+                    photoUri)
+            //giving temporary write permissions on the photouri to the Intent
+            val intentActivities = packageManager.queryIntentActivities(
+                    captureIntent, PackageManager.MATCH_DEFAULT_ONLY)
+            intentActivities.map { it.activityInfo.packageName }
+                    .forEach { grantUriPermission(it, photoUri,
+                            Intent.FLAG_GRANT_WRITE_URI_PERMISSION) }
+            //invoking Intent & passing request code
+            startActivityForResult(captureIntent, REQUEST_CAPTURE_IMAGE)
+        }
+    }
+    override fun onPickClick() {
+        val pickIntent = Intent(Intent.ACTION_PICK,
+                MediaStore.Images.Media.EXTERNAL_CONTENT_URI)
+        startActivityForResult(pickIntent, REQUEST_GALLERY_IMAGE)
+    }
+
+    private fun getImageWithAuthority(uri: Uri) =
+            ImageUtils.decodeUriStreamToSize(
+                    uri,
+                    resources.getDimensionPixelSize(R.dimen.default_image_width),
+                    resources.getDimensionPixelSize(R.dimen.default_image_height),
+                    this
+            )
+
+    private fun replaceImage() {
+        val newFragment = PhotoOptionDialogFragment.newInstance(this)
+        newFragment?.show(supportFragmentManager, "photoOptionDialog")
     }
 
     private fun populateImageView() {
@@ -33,6 +95,9 @@ class BookmarkDetailsActivity : AppCompatActivity() {
             placeImage?.let {
                 databinding.imageViewPlace.setImageBitmap(placeImage)
             }
+        }
+        databinding.imageViewPlace.setOnClickListener {
+            replaceImage()
         }
     }
 
@@ -79,6 +144,57 @@ class BookmarkDetailsActivity : AppCompatActivity() {
         finish()
     }
 
+    private fun updateImage(image: Bitmap) {
+        bookmarkDetailsView?.let {
+            databinding.imageViewPlace.setImageBitmap(image)
+            it.setImage(this, image)
+        }
+    }
+
+    private fun getImageWithPath(filePath: String) =
+            ImageUtils.decodeFileToSize(
+                    filePath,
+                    resources.getDimensionPixelSize(R.dimen.default_image_width),
+                    resources.getDimensionPixelSize(R.dimen.default_image_height)
+            )
+
+    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+        super.onActivityResult(requestCode, resultCode, data)
+        //checking to make sure User didn’t cancel photo capture
+        if (resultCode == android.app.Activity.RESULT_OK) {
+            //checking to see which call is returning a result
+            when (requestCode) {
+                //if requestCode matches REQUEST_CAPTURE_IMAGE, processing
+                //continues
+                REQUEST_CAPTURE_IMAGE -> {
+                    //returning early from the method if no photoFile defined
+                    val photoFile = photoFile ?: return
+                    //revoking permissions
+                    val uri = FileProvider.getUriForFile(this,
+                            "com.raywenderlich.placebook.fileprovider",
+                            photoFile)
+                    revokeUriPermission(uri,
+                            Intent.FLAG_GRANT_WRITE_URI_PERMISSION)
+                    //getting the image from the new photo path & updating the bookmark image
+                    val image = getImageWithPath(photoFile.absolutePath)
+                    val bitmap = ImageUtils.rotateImageIfRequired(this,
+                            image , uri)
+                    updateImage(bitmap)
+                }
+                REQUEST_GALLERY_IMAGE -> if (data != null && data.data != null)
+                {
+                    val imageUri = data.data as Uri
+                    val image = getImageWithAuthority(imageUri)
+                    image?.let {
+                        val bitmap = ImageUtils.rotateImageIfRequired(this, it,
+                                imageUri)
+                        updateImage(bitmap)
+                    }
+                }
+            }
+        }
+    }
+
     override fun onOptionsItemSelected(item: MenuItem): Boolean =
         when (item.itemId) {
             R.id.action_save -> {
@@ -88,4 +204,8 @@ class BookmarkDetailsActivity : AppCompatActivity() {
             else -> super.onOptionsItemSelected(item)
         }
 
+    companion object {
+        private const val REQUEST_CAPTURE_IMAGE = 1
+        private const val REQUEST_GALLERY_IMAGE = 2
+    }
 }
