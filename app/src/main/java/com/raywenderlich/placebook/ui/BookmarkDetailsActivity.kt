@@ -37,17 +37,18 @@ class BookmarkDetailsActivity : AppCompatActivity() {
     }
 
     private fun getIntentData() {
-        // 1
+        //pulling bookmark id from intent data
         val bookmarkId = intent.getLongExtra(
             MapsActivity.Companion.EXTRA_BOOKMARK_ID, 0)
-        // 2
-
+        //retrieving the BookmarkDetailsView from BookmarkDetailsViewModel &
+        //then observing it for changes
         bookmarkDetailsViewModel.getBookmark(bookmarkId)?.observe(this,
             {
-                // 3
+                //assigning the bookmarkDetailsView property & populating the bookmark
+                //fields from the data
                 it?.let {
                     bookmarkDetailsView = it
-                    // 4
+                    //setting the databinding's variable
                     databinding.bookmarkDetailsView = it
                     populateImageView()
                 }

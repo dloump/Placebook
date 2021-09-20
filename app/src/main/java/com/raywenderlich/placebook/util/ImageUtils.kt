@@ -5,30 +5,30 @@ import java.io.ByteArrayOutputStream
 import java.io.File
 import java.io.FileOutputStream
 
-// 1
+//declaring object
 object ImageUtils {
-    // 2
+    //saving Bitmap to permanent storage
     fun saveBitmapToFile(context: Context, bitmap: Bitmap,
                          filename: String) {
-        // 3
+        //creating val to hold the image data
         val stream = ByteArrayOutputStream()
-        // 4
+        //writing image bitmap to stream object
         bitmap.compress(Bitmap.CompressFormat.PNG, 100, stream)
-        // 5
+        //converting stream into an array of bytes
         val bytes = stream.toByteArray()
-        // 6
+        //writing the bytes to a file
         saveBytesToFile(context, bytes, filename)
     }
-    // 7
+    //saving the bytes to a file
     private fun saveBytesToFile(context: Context, bytes:
     ByteArray, filename: String) {
         val outputStream: FileOutputStream
-        // 8
+        //try/catch to prevent crashes from possible thrown exceptions
         try {
-            // 9
+            //opening a fileoutput stream & writing data to private area
             outputStream = context.openFileOutput(filename,
                 Context.MODE_PRIVATE)
-            // 10
+            //bytes written to output stream & then closing stream
             outputStream.write(bytes)
             outputStream.close()
         } catch (e: Exception) {

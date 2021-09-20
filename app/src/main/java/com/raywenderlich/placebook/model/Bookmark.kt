@@ -23,18 +23,18 @@ data class Bookmark(
 )
 
 {
-    // 1
+    //providing public interface for saving an image for a bookmark
     fun setImage(image: Bitmap, context: Context) {
-        // 2
+        //if bookmark has an id, saving image to a file
         id?.let {
             ImageUtils.saveBitmapToFile(context, image,
                 generateImageFilename(it))
         }
     }
-    //3
+    //allowing another object to load an image without loading bookmark from database
     companion object {
         fun generateImageFilename(id: Long): String {
-            // 4
+            //returns a filename based on a bookmark id
             return "bookmark$id.png"
         }
     }

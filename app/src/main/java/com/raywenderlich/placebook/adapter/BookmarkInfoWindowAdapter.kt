@@ -29,16 +29,18 @@ class BookmarkInfoWindowAdapter(val context: Activity) :
         val imageView = binding.photo
         return binding.root
         when (marker.tag) {
-            //
+            //setting the imageView bitmap
+            //directly from the PlaceInfo object
             is MapsActivity.PlaceInfo -> {
                 imageView.setImageBitmap(
                     (marker.tag as MapsActivity.PlaceInfo).image)
             }
-            //
+            //setting the imageView
+            //bitmap from the BookmarkMarkerView
             is MapsViewModel.BookmarkMarkerView -> {
                 val bookMarkview = marker.tag as
                         MapsViewModel.BookmarkMarkerView
-                // Set imageView bitmap here
+                //Setting imageView bitmap here
                 imageView.setImageBitmap(bookMarkview.getImage(context))
             }
         }
