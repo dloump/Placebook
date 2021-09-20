@@ -8,6 +8,7 @@ import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.provider.MediaStore
 import android.view.MenuItem
+import android.widget.ArrayAdapter
 import android.widget.Toast
 import androidx.activity.viewModels
 import androidx.core.content.FileProvider
@@ -116,6 +117,7 @@ class BookmarkDetailsActivity : AppCompatActivity(),
                     //setting the databinding's variable
                     databinding.bookmarkDetailsView = it
                     populateImageView()
+                    populateCategoryList()
                 }
             })
     }
@@ -194,6 +196,30 @@ class BookmarkDetailsActivity : AppCompatActivity(),
                 }
             }
         }
+    }
+
+    private fun populateCategoryList() {
+        //returns immediately if bookmarkDetailsView is null
+        val bookmarkView = bookmarkDetailsView ?: return
+        //retrieving the category icon resourceId from view model
+        val resourceId =
+                bookmarkDetailsViewModel.getCategoryResourceId(bookmarkView.category)
+        //if resourceId is not null, updating imageViewCategory to category icon
+        resourceId?.let
+        { databinding.imageViewCategory.setImageResource(it) }
+        //retrieving list of categories from view model
+        val categories = bookmarkDetailsViewModel.getCategories()
+        //creating an adapter & assigning the Adapter to a built-in Layout resource
+        val adapter = ArrayAdapter(this,
+                android.R.layout.simple_spinner_item, categories)
+
+        adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
+        //assigning the Adapter to spinnerCategory control
+        databinding.spinnerCategory.adapter = adapter
+        //updating spinnerCategory to reflect current category selection
+        val placeCategory = bookmarkView.category
+
+        databinding.spinnerCategory.setSelection(adapter.getPosition(placeCategory))
     }
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean =

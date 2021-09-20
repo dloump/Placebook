@@ -152,7 +152,8 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback {
             Place.Field.PHONE_NUMBER,
             Place.Field.PHOTO_METADATAS,
             Place.Field.ADDRESS,
-            Place.Field.LAT_LNG)
+            Place.Field.LAT_LNG,
+                Place.Field.TYPES)
         val request = FetchPlaceRequest
             .builder(placeId, placeFields)
             .build()
@@ -257,12 +258,13 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback {
     private fun addPlaceMarker(
         bookmark: MapsViewModel.BookmarkView): Marker? {
         val marker = map.addMarker(MarkerOptions()
-            .position(bookmark.location)
-            .title(bookmark.name)
-            .snippet(bookmark.phone)
-            .icon(BitmapDescriptorFactory.defaultMarker(
-                BitmapDescriptorFactory.HUE_AZURE))
-            .alpha(0.8f))
+                .position(bookmark.location)
+                .title(bookmark.name)
+                .snippet(bookmark.phone)
+                .icon(bookmark.categoryResourceId?.let {
+                    BitmapDescriptorFactory.fromResource(it)
+                })
+                .alpha(0.8f))
         marker.tag = bookmark
         bookmark.id?.let { markers.put(it, marker) }
         return marker

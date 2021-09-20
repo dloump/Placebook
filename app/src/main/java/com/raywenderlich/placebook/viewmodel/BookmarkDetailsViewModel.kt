@@ -21,7 +21,8 @@ class BookmarkDetailsViewModel(application: Application) :
         var name: String = "",
         var phone: String = "",
         var address: String = "",
-        var notes: String = ""
+        var notes: String = "",
+        var category: String = ""
     ) {
         fun getImage(context: Context) = id?.let {
             ImageUtils.loadBitmapFromFile(context,
@@ -41,7 +42,8 @@ class BookmarkDetailsViewModel(application: Application) :
             bookmark.name,
             bookmark.phone,
             bookmark.address,
-            bookmark.notes
+            bookmark.notes,
+                bookmark.category
         )
     }
 
@@ -72,8 +74,17 @@ class BookmarkDetailsViewModel(application: Application) :
             bookmark.phone = bookmarkView.phone
             bookmark.address = bookmarkView.address
             bookmark.notes = bookmarkView.notes
+            bookmark.category = bookmarkDetailsView.category
         }
         return bookmark
+    }
+
+    fun getCategoryResourceId(category: String): Int? {
+        return bookmarkRepo.getCategoryResourceId(category)
+    }
+
+    fun getCategories(): List<String> {
+        return bookmarkRepo.categories
     }
 
     fun updateBookmark(bookmarkView: BookmarkDetailsView) {

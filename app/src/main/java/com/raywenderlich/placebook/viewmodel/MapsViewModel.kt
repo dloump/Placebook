@@ -47,13 +47,15 @@ class MapsViewModel(application: Application) :
         return bookmarks
     }
 
-    private fun bookmarkToBookmarkView(bookmark: Bookmark) =
-        BookmarkView(
-            bookmark.id,
-            LatLng(bookmark.latitude, bookmark.longitude),
-            bookmark.name,
-            bookmark.phone
-        )
+    private fun bookmarkToBookmarkView(bookmark: Bookmark):
+            BookmarkView {
+        return BookmarkView(
+                bookmark.id,
+                LatLng(bookmark.latitude, bookmark.longitude),
+                bookmark.name,
+                bookmark.phone,
+                bookmarkRepo.getCategoryResourceId(bookmark.category))
+    }
 
     private fun mapBookmarksToBookmarkView() {
         //dynamically mapping bookmark objects into BookmarkMarkerView objects
@@ -68,12 +70,28 @@ class MapsViewModel(application: Application) :
         }
     }
 
-    data class BookmarkView(
-        var id: Long? = null,
-        var location: LatLng = LatLng(0.0, 0.0),
-        var name: String = "",
-        var phone: String = ""
-    ) {
+    private fun getPlaceCategory(place: Place): String {
+        //setting category default to Other for places with unassigned types
+        var category = "Other"
+        val types = place.types
+        types?.let { placeTypes ->
+            //checking placetypes list to see if it's populated
+            if (placeTypes.size > 0) {
+                //if populated, extracting first type from List and calling
+                    //placeTypeToCategory() to make conversion
+                val placeType = placeTypes[0]
+                category = bookmarkRepo.placeTypeToCategory(placeType)
+            }
+        }
+        //returning the category
+        return category
+    }
+
+    data class BookmarkView(val id: Long? = null,
+                            val location: LatLng = LatLng(0.0, 0.0),
+                            val name: String = "",
+                            val phone: String = "",
+                            val categoryResourceId: Int? = null) {
         fun getImage(context: Context) = id?.let {
             ImageUtils.loadBitmapFromFile(context,
                 Bookmark.generateImageFilename(it))
