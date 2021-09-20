@@ -74,7 +74,7 @@ class BookmarkDetailsViewModel(application: Application) :
             bookmark.phone = bookmarkView.phone
             bookmark.address = bookmarkView.address
             bookmark.notes = bookmarkView.notes
-            bookmark.category = bookmarkDetailsView.category
+            bookmark.category = bookmarkView.category
         }
         return bookmark
     }
