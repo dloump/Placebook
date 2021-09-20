@@ -15,7 +15,7 @@ import com.raywenderlich.placebook.repository.BookmarkRepo
 //defining class which inherits from AndroidViewModel
 class MapsViewModel(application: Application) :
     AndroidViewModel(application) {
-    private var bookmarks: LiveData<List<BookmarkMarkerView>>? =
+    private var bookmarks: LiveData<List<BookmarkView>>? =
         null
     private val TAG = "MapsViewModel"
     //creating bookmarkRepo object
@@ -39,23 +39,23 @@ class MapsViewModel(application: Application) :
 
     //creating method to initialize & return the bookmark marker views to
     //the MapsActivity
-    fun getBookmarkMarkerViews() :
-            LiveData<List<BookmarkMarkerView>>? {
+    fun getBookmarkViews() :
+            LiveData<List<BookmarkView>>? {
         if (bookmarks == null) {
-            mapBookmarksToMarkerView()
+            mapBookmarksToBookmarkView()
         }
         return bookmarks
     }
 
-    private fun bookmarkToMarkerView(bookmark: Bookmark) =
-        BookmarkMarkerView(
+    private fun bookmarkToBookmarkView(bookmark: Bookmark) =
+        BookmarkView(
             bookmark.id,
             LatLng(bookmark.latitude, bookmark.longitude),
             bookmark.name,
             bookmark.phone
         )
 
-    private fun mapBookmarksToMarkerView() {
+    private fun mapBookmarksToBookmarkView() {
         //dynamically mapping bookmark objects into BookmarkMarkerView objects
         //as they're updated in the database
         bookmarks = Transformations.map(bookmarkRepo.allBookmarks)
@@ -63,12 +63,12 @@ class MapsViewModel(application: Application) :
             //provided List of bookmarks returned from repo
             //to be stored in the bookmarks variable
             repoBookmarks.map { bookmark ->
-                bookmarkToMarkerView(bookmark)
+                bookmarkToBookmarkView(bookmark)
             }
         }
     }
 
-    data class BookmarkMarkerView(
+    data class BookmarkView(
         var id: Long? = null,
         var location: LatLng = LatLng(0.0, 0.0),
         var name: String = "",

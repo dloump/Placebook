@@ -20,7 +20,7 @@ interface BookmarkDao {
     @Query("SELECT * FROM Bookmark")
     fun loadAll(): LiveData<List<Bookmark>>
     //returning a single bookmark object
-    @Query("SELECT * FROM Bookmark WHERE id = :bookmarkId")
+    @Query("SELECT * FROM Bookmark ORDER BY name")
     fun loadBookmark(bookmarkId: Long): Bookmark
     @Query("SELECT * FROM Bookmark WHERE id = :bookmarkId")
     fun loadLiveBookmark(bookmarkId: Long): LiveData<Bookmark>
