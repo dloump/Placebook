@@ -254,7 +254,7 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback {
         }
     }
 
-    //adds single blue marker to map based on a BookmarkMarkerView
+    //adds single blue marker to map based on a BookmarkView
     private fun addPlaceMarker(
         bookmark: MapsViewModel.BookmarkView): Marker? {
         val marker = map.addMarker(MarkerOptions()
@@ -285,7 +285,7 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback {
                 map.clear()
                 markers.clear()
                 //calling dispayAllBookmarks with list of updated
-                //BookmarkMarkerView objects
+                //BookmarkView objects
                 it?.let {
                     displayAllBookmarks(it)
                     bookmarkListAdapter.setBookmarkData(it)
@@ -326,11 +326,11 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback {
         //closing navigation drawer
         databinding.drawerLayout.closeDrawer(databinding.drawerViewMaps.
         drawerView)
-        //looking up the marker
+        //looking up marker
         val marker = markers[bookmark.id]
         //if marker is found, showing info window
         marker?.showInfoWindow()
-        //location object created from the bookmark & zooming the map to the bookmark
+        //location object created from bookmark & zooming map to bookmark
         val location = Location("")
         location.latitude = bookmark.location.latitude
         location.longitude = bookmark.location.longitude
