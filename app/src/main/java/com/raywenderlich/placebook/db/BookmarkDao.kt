@@ -17,11 +17,11 @@ import com.raywenderlich.placebook.model.Bookmark
 interface BookmarkDao {
     //defining an SQL statement to read all bookmarks from database & return them as a List
     //wrapping them with LiveData to notify observing objects when data changes
-    @Query("SELECT * FROM Bookmark")
-    fun loadAll(): LiveData<List<Bookmark>>
-    //returning a single bookmark object
-    @Query("SELECT * FROM Bookmark ORDER BY name")
-    fun loadBookmark(bookmarkId: Long): Bookmark
+  @Query("SELECT * FROM Bookmark ORDER BY name")
+  fun loadAll(): LiveData<List<Bookmark>>
+
+  @Query("SELECT * FROM Bookmark WHERE id = :bookmarkId")
+  fun loadBookmark(bookmarkId: Long): Bookmark
     @Query("SELECT * FROM Bookmark WHERE id = :bookmarkId")
     fun loadLiveBookmark(bookmarkId: Long): LiveData<Bookmark>
     //saving a single bookmark to database & returning new
