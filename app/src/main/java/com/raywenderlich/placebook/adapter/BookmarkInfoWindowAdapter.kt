@@ -15,33 +15,31 @@ class BookmarkInfoWindowAdapter(val context: Activity) :
     //initializing variable
     private val binding =
         ContentBookmarkInfoBinding.inflate(context.layoutInflater)
-    //
+
     override fun getInfoWindow(marker: Marker): View? {
-        // This function is required, but can return null if
-        // not replacing the entire info window
+        //this function is required, but can return null if
+        //not replacing entire info window
         return null
     }
-    //filling in title and text views on the layout
+    //filling in title and text views on layout
     override fun getInfoContents(marker: Marker): View? {
         binding.title.text = marker.title ?: ""
         binding.phone.text = marker.snippet ?: ""
         val imageView = binding.photo
-        return binding.root
         when (marker.tag) {
-            //setting the imageView bitmap
-            //directly from the PlaceInfo object
+            //setting imageView bitmap directly from PlaceInfo object
             is MapsActivity.PlaceInfo -> {
                 imageView.setImageBitmap(
-                    (marker.tag as MapsActivity.PlaceInfo).image)
+                        (marker.tag as MapsActivity.PlaceInfo).image)
             }
-            //setting the imageView
-            //bitmap from the BookmarkMarkerView
+            //setting imageView bitmap from bookmarkview
             is MapsViewModel.BookmarkView -> {
                 val bookMarkview = marker.tag as
                         MapsViewModel.BookmarkView
-                //Setting imageView bitmap here
+                //setting imageView bitmap
                 imageView.setImageBitmap(bookMarkview.getImage(context))
             }
         }
+        return binding.root
     }
 }

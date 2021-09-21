@@ -42,7 +42,7 @@ class BookmarkListAdapter(
     Int) {
         //making sure bookmarkdata is not null before binding
         bookmarkData?.let { list->
-            //assigning bookmark data for the current item position
+            //assigning bookmark data for current item position
             val bookmarkViewData = list[position]
             //references being populated from bookmarkview data
             holder.binding.root.tag = bookmarkViewData
@@ -54,6 +54,6 @@ class BookmarkListAdapter(
         }
     }
 
-    //returning number of items in the bookmark data list
+    //returning number of items in bookmark data list
     override fun getItemCount() = bookmarkData?.size ?: 0
 }
