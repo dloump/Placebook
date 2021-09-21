@@ -76,7 +76,7 @@ class PhotoOptionDialogFragment : DialogFragment() {
         }
         //helper method to help parent activity when creating new photooptiondialog fragment
         fun newInstance(context: Context) =
-                //if the device can pick from a gallery or take a new image, the
+                //if device can pick from a gallery or take a new image,
                 //PhotoOptionDialogFragment is created & returned, otherwise null is
                 //returned
                 if (canPick(context) || canCapture(context)) {
