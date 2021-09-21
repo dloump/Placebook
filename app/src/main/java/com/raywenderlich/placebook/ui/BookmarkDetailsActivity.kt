@@ -210,7 +210,7 @@ class BookmarkDetailsActivity : AppCompatActivity(),
         resourceId?.let{ databinding.imageViewCategory.setImageResource(it) }
         //retrieving list of categories from view model
         val categories = bookmarkDetailsViewModel.getCategories()
-        //creating an adapter & assigning Adapter to a built-in Layout resource
+        //creating adapter & assigning Adapter to built-in Layout resource
         val adapter = ArrayAdapter(this,
                 android.R.layout.simple_spinner_item, categories)
 

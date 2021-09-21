@@ -21,7 +21,7 @@ class BookmarkInfoWindowAdapter(val context: Activity) :
         //not replacing entire info window
         return null
     }
-    //filling in title and text views on layout
+    //filling in title & text views on layout
     override fun getInfoContents(marker: Marker): View? {
         binding.title.text = marker.title ?: ""
         binding.phone.text = marker.snippet ?: ""

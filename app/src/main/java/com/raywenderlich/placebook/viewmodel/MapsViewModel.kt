@@ -76,7 +76,7 @@ class MapsViewModel(application: Application) :
         types?.let { placeTypes ->
             //checking placetypes list to see if it's populated
             if (placeTypes.size > 0) {
-                //if populated, extracting first type from List and calling
+                //if populated, extracting first type from List & calling
                     //placeTypeToCategory() to make conversion
                 val placeType = placeTypes[0]
                 category = bookmarkRepo.placeTypeToCategory(placeType)

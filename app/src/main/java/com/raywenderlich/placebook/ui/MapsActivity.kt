@@ -51,7 +51,7 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback {
         databinding = ActivityMapsBinding.inflate(layoutInflater)
         setContentView(databinding.root)
 
-        // Obtain the SupportMapFragment and get notified when the map is ready to be used.
+        // Obtain SupportMapFragment & get notified when the map is ready to be used.
         val mapFragment = supportFragmentManager
             .findFragmentById(R.id.map) as SupportMapFragment
         mapFragment.getMapAsync(this)
@@ -270,14 +270,14 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback {
         return marker
     }
 
-    //method for displaying all of the bookmark markers
+    //method for displaying all bookmark markers
     private fun displayAllBookmarks(
         bookmarks: List<MapsViewModel.BookmarkView>) {
         bookmarks.forEach { addPlaceMarker(it) }
     }
 
     private fun createBookmarkObserver() {
-        //retrieving a LiveData object, "telling" observer to follow lifecycle
+        //retrieving a LiveData object, telling observer to follow lifecycle
         //of current activity, & processing updated bookmarks
         mapsViewModel.getBookmarkViews()?.observe(
             this, {
