@@ -88,11 +88,11 @@ class BookmarkDetailsViewModel(application: Application) :
     }
 
     fun updateBookmark(bookmarkView: BookmarkDetailsView) {
-        //allowing calls to be made by the bookmark repo
+        //allowing calls to be made by bookmark repo
         GlobalScope.launch {
             //converting to a bookmark
             val bookmark = bookmarkViewToBookmark(bookmarkView)
-            //if bookmark is not null, it's updated in the bookmark repo
+            //if bookmark is not null, it's updated in bookmark repo
             bookmark?.let { bookmarkRepo.updateBookmark(it) }
         }
     }

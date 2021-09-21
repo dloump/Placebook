@@ -49,9 +49,9 @@ class BookmarkDetailsActivity : AppCompatActivity(),
             //if an exception is thrown, method returns after doing nothing
             return
         }
-        //making sure photoFile is not null before continuing with the method
+        //making sure photoFile is not null before continuing with method
         photoFile?.let { photoFile ->
-            //getting a Uri for the temporary photo file
+            //getting a Uri for temporary photo file
             val photoUri = FileProvider.getUriForFile(this,
                     "com.raywenderlich.placebook.fileprovider",
                     photoFile)
@@ -61,7 +61,7 @@ class BookmarkDetailsActivity : AppCompatActivity(),
             //letting Intent know where to save the full-size image captured by User
             captureIntent.putExtra(android.provider.MediaStore.EXTRA_OUTPUT,
                     photoUri)
-            //giving temporary write permissions on the photouri to the Intent
+            //giving temporary write permissions on photouri to Intent
             val intentActivities = packageManager.queryIntentActivities(
                     captureIntent, PackageManager.MATCH_DEFAULT_ONLY)
             intentActivities.map { it.activityInfo.packageName }
@@ -106,15 +106,15 @@ class BookmarkDetailsActivity : AppCompatActivity(),
         //pulling bookmark id from intent data
         val bookmarkId = intent.getLongExtra(
             MapsActivity.Companion.EXTRA_BOOKMARK_ID, 0)
-        //retrieving the BookmarkDetailsView from BookmarkDetailsViewModel &
+        //retrieving BookmarkDetailsView from BookmarkDetailsViewModel &
         //then observing it for changes
         bookmarkDetailsViewModel.getBookmark(bookmarkId)?.observe(this,
             {
-                //assigning the bookmarkDetailsView property & populating the bookmark
-                //fields from the data
+                //assigning bookmarkDetailsView property & populating bookmark
+                //fields from data
                 it?.let {
                     bookmarkDetailsView = it
-                    //setting the databinding's variable
+                    //setting databinding's variable
                     databinding.bookmarkDetailsView = it
                     populateImageView()
                     populateCategoryList()
@@ -177,7 +177,7 @@ class BookmarkDetailsActivity : AppCompatActivity(),
                             photoFile)
                     revokeUriPermission(uri,
                             Intent.FLAG_GRANT_WRITE_URI_PERMISSION)
-                    //getting the image from the new photo path & updating the bookmark image
+                    //getting image from new photo path & updating bookmark image
                     val image = getImageWithPath(photoFile.absolutePath)
                     val bitmap = ImageUtils.rotateImageIfRequired(this,
                             image , uri)
@@ -208,12 +208,12 @@ class BookmarkDetailsActivity : AppCompatActivity(),
         resourceId?.let{ databinding.imageViewCategory.setImageResource(it) }
         //retrieving list of categories from view model
         val categories = bookmarkDetailsViewModel.getCategories()
-        //creating an adapter & assigning the Adapter to a built-in Layout resource
+        //creating an adapter & assigning Adapter to a built-in Layout resource
         val adapter = ArrayAdapter(this,
                 android.R.layout.simple_spinner_item, categories)
 
         adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
-        //assigning the Adapter to spinnerCategory control
+        //assigning Adapter to spinnerCategory control
         databinding.spinnerCategory.adapter = adapter
         //updating spinnerCategory to reflect current category selection
         val placeCategory = bookmarkView.category

@@ -37,8 +37,7 @@ class MapsViewModel(application: Application) :
         image?.let { bookmark.setImage(it, getApplication()) }
     }
 
-    //creating method to initialize & return the bookmark marker views to
-    //the MapsActivity
+    //creating method to initialize & return bookmark marker views to MapsActivity
     fun getBookmarkViews() :
             LiveData<List<BookmarkView>>? {
         if (bookmarks == null) {
@@ -59,11 +58,11 @@ class MapsViewModel(application: Application) :
 
     private fun mapBookmarksToBookmarkView() {
         //dynamically mapping bookmark objects into BookmarkMarkerView objects
-        //as they're updated in the database
+        //as updated in database
         bookmarks = Transformations.map(bookmarkRepo.allBookmarks)
         { repoBookmarks ->
             //provided List of bookmarks returned from repo
-            //to be stored in the bookmarks variable
+            //to be stored in bookmarks variable
             repoBookmarks.map { bookmark ->
                 bookmarkToBookmarkView(bookmark)
             }
@@ -83,7 +82,7 @@ class MapsViewModel(application: Application) :
                 category = bookmarkRepo.placeTypeToCategory(placeType)
             }
         }
-        //returning the category
+        //returning category
         return category
     }
 
