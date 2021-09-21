@@ -11,6 +11,8 @@ import android.location.Location
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.util.Log
+import android.view.WindowManager
+import android.widget.ProgressBar
 import android.widget.Toast
 import androidx.activity.viewModels
 import androidx.appcompat.app.ActionBarDrawerToggle
@@ -149,8 +151,10 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback {
     }
 
     private fun displayPoi(pointOfInterest: PointOfInterest) {
+        showProgress()
         displayPoiGetPlaceStep(pointOfInterest)
     }
+
     private fun displayPoiGetPlaceStep(pointOfInterest:
                                        PointOfInterest) {
         val placeId = pointOfInterest.placeId
@@ -176,6 +180,7 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback {
                         "Place not found: " +
                                 exception.message + ", " +
                                 "statusCode: " + statusCode)
+                    hideProgress()
                 }
             }
     }
@@ -213,12 +218,14 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback {
                         "Place not found: " +
                                 exception.message + ", " +
                                 "statusCode: " + statusCode)
+                    hideProgress()
                 }
             }
     }
 
     private fun displayPoiDisplayStep(place: Place, photo: Bitmap?)
     {
+        hideProgress()
         val marker = map.addMarker(MarkerOptions()
             .position(place.latLng as LatLng)
             .title(place.name)
@@ -407,6 +414,7 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback {
                     location.latitude = place.latLng?.latitude ?: 0.0
                     location.longitude = place.latLng?.longitude ?: 0.0
                     updateMapToLocation(location)
+                    showProgress()
                     //loading place photo & displaying place Info window
                     displayPoiGetPhotoStep(place)
                 }
@@ -420,6 +428,28 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback {
                 startBookmarkDetails(it)
             }
         }
+    }
+
+    private fun disableUserInteraction() {
+        window.setFlags(WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE,
+                WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE)
+    }
+
+    private fun enableUserInteraction() {
+        window.clearFlags(
+                WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE)
+    }
+
+    private fun showProgress() {
+        databinding.mainMapView.progressBar.visibility =
+                ProgressBar.VISIBLE
+        disableUserInteraction()
+    }
+
+    private fun hideProgress() {
+        databinding.mainMapView.progressBar.visibility =
+                ProgressBar.GONE
+        enableUserInteraction()
     }
 
     class PlaceInfo(val place: Place? = null,
