@@ -9,14 +9,17 @@ import androidx.appcompat.app.AlertDialog
 import androidx.fragment.app.DialogFragment
 
 class PhotoOptionDialogFragment : DialogFragment() {
+
     //defining interface
     interface PhotoOptionDialogListener {
         fun onCaptureClick()
         fun onPickClick()
     }
+
     //defining property to hold instance
     private lateinit var listener: PhotoOptionDialogListener
-    //standard method
+
+    //
     override fun onCreateDialog(savedInstanceState: Bundle?):
             Dialog {
         //listener property set to parent activity

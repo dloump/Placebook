@@ -24,8 +24,8 @@ interface BookmarkDao {
     fun loadBookmark(bookmarkId: Long): Bookmark
     @Query("SELECT * FROM Bookmark WHERE id = :bookmarkId")
     fun loadLiveBookmark(bookmarkId: Long): LiveData<Bookmark>
-    //saving a single bookmark to the database & returning the new
-    //primary key associated with the new bookmark
+    //saving a single bookmark to database & returning new
+    //primary key associated with new bookmark
     @Insert(onConflict = IGNORE)
     fun insertBookmark(bookmark: Bookmark): Long
     //updating a single bookmark, set to REPLACE so that

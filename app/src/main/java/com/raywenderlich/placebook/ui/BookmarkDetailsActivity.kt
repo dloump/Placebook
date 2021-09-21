@@ -20,12 +20,14 @@ import java.io.File
 
 class BookmarkDetailsActivity : AppCompatActivity(),
         PhotoOptionDialogFragment.PhotoOptionDialogListener {
+
     private var photoFile: File? = null
     private lateinit var databinding:
             ActivityBookmarkDetailsBinding
     private val bookmarkDetailsViewModel by viewModels<BookmarkDetailsViewModel>()
     private var bookmarkDetailsView:
             BookmarkDetailsViewModel.BookmarkDetailsView? = null
+
     override fun onCreate(savedInstanceState: android.os.Bundle?)
     {
         super.onCreate(savedInstanceState)
@@ -103,7 +105,7 @@ class BookmarkDetailsActivity : AppCompatActivity(),
     }
 
     private fun getIntentData() {
-        //pulling bookmark id from intent data
+        //pulling bookmarkid from intent data
         val bookmarkId = intent.getLongExtra(
             MapsActivity.Companion.EXTRA_BOOKMARK_ID, 0)
         //retrieving BookmarkDetailsView from BookmarkDetailsViewModel &

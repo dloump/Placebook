@@ -10,7 +10,7 @@ import androidx.room.PrimaryKey
 //constructing Bookmark class
 data class Bookmark(
     //defining required id property &
-    //"telling" Room to generate incrementing numbers
+    //telling Room to generate incrementing numbers
     @PrimaryKey(autoGenerate = true) var id: Long? = null,
     //defining fields with default values
     var placeId: String? = null,

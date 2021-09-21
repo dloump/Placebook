@@ -11,9 +11,9 @@ import com.raywenderlich.placebook.model.Bookmark
 abstract class PlaceBookDatabase : RoomDatabase() {
     //returning a DAO interface
     abstract fun bookmarkDao(): BookmarkDao
-    // 3
+    //
     companion object {
-        // 4
+        //
         private var instance: PlaceBookDatabase? = null
         //taking in context & returning single instance
         fun getInstance(context: Context): PlaceBookDatabase {
