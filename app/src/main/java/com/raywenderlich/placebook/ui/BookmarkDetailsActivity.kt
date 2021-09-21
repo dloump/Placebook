@@ -223,6 +223,7 @@ class BookmarkDetailsActivity : AppCompatActivity(),
         databinding.spinnerCategory.setSelection(adapter.getPosition(placeCategory))
     }
 
+    //
     override fun onOptionsItemSelected(item: MenuItem): Boolean =
         when (item.itemId) {
             R.id.action_save -> {
