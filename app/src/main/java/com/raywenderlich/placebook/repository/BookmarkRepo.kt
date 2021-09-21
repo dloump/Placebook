@@ -9,7 +9,7 @@ import com.raywenderlich.placebook.db.PlaceBookDatabase
 import com.raywenderlich.placebook.model.Bookmark
 
 //defining class with required Context Object
-class BookmarkRepo(context: Context) {
+class BookmarkRepo(private var context: Context) {
     //defining properties
     val categories: List<String>
         get() = ArrayList(allCategories.keys)
