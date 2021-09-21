@@ -8,15 +8,19 @@ import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.provider.MediaStore
 import android.view.MenuItem
+import android.view.View
+import android.widget.AdapterView
 import android.widget.ArrayAdapter
 import android.widget.Toast
 import androidx.activity.viewModels
+import androidx.appcompat.app.AlertDialog
 import androidx.core.content.FileProvider
 import androidx.databinding.DataBindingUtil
 import com.raywenderlich.placebook.R
 import com.raywenderlich.placebook.databinding.ActivityBookmarkDetailsBinding
 import com.raywenderlich.placebook.viewmodel.BookmarkDetailsViewModel
 import java.io.File
+import java.net.URLEncoder
 
 class BookmarkDetailsActivity : AppCompatActivity(),
         PhotoOptionDialogFragment.PhotoOptionDialogListener {
@@ -35,6 +39,7 @@ class BookmarkDetailsActivity : AppCompatActivity(),
             R.layout.activity_bookmark_details)
         setupToolbar()
         getIntentData()
+        setupFab()
     }
 
     private fun setupToolbar() {
@@ -143,6 +148,8 @@ class BookmarkDetailsActivity : AppCompatActivity(),
                 databinding.editTextAddress.text.toString()
             bookmarkView.phone =
                 databinding.editTextPhone.text.toString()
+            bookmarkView.category = databinding.spinnerCategory.selectedItem
+                    as String
             bookmarkDetailsViewModel.updateBookmark(bookmarkView)
         }
         finish()
@@ -221,6 +228,26 @@ class BookmarkDetailsActivity : AppCompatActivity(),
         val placeCategory = bookmarkView.category
 
         databinding.spinnerCategory.setSelection(adapter.getPosition(placeCategory))
+        //1
+        databinding.spinnerCategory.post {
+            //2
+            databinding.spinnerCategory.onItemSelectedListener = object :
+                    AdapterView.OnItemSelectedListener {
+                override fun onItemSelected(parent: AdapterView<*>, view:
+                View, position: Int, id: Long) {
+                    //3
+                    val category = parent.getItemAtPosition(position) as
+                            String
+                    val resourceId =
+                            bookmarkDetailsViewModel.getCategoryResourceId(category)
+                    resourceId?.let {
+                        databinding.imageViewCategory.setImageResource(it) }
+                }
+                override fun onNothingSelected(parent: AdapterView<*>) {
+                    //NOTE: This method is required but not used.
+                }
+            }
+        }
     }
 
     //
@@ -230,8 +257,65 @@ class BookmarkDetailsActivity : AppCompatActivity(),
                 saveChanges()
                 true
             }
+            R.id.action_delete -> {
+                deleteBookmark()
+                true
+            }
             else -> super.onOptionsItemSelected(item)
         }
+
+    private fun deleteBookmark()
+    {
+        val bookmarkView = bookmarkDetailsView ?: return
+        AlertDialog.Builder(this)
+                .setMessage("Delete?")
+                .setPositiveButton("Ok") { _, _ ->
+                    bookmarkDetailsViewModel.deleteBookmark(bookmarkView)
+                    finish()
+                }
+                .setNegativeButton("Cancel", null)
+                .create().show()
+    }
+
+    private fun sharePlace() {
+        //returning early if bookmarkView is null
+        val bookmarkView = bookmarkDetailsView ?: return
+        //if User creates ad-hoc bookmark, directions go directly
+        //to latitude/longitude of bookmark. If bookmark is created from a
+        //place, directions go to place based on its ID
+        var mapUrl = ""
+        if (bookmarkView.placeId == null) {
+            //constructing string with latitude/longitude separated by a comma
+                //to add to final url
+            val location = URLEncoder.encode("${bookmarkView.latitude},"
+                    + "${bookmarkView.longitude}", "utf-8")
+            mapUrl = "https://www.google.com/maps/dir/?api=1" +
+                    "&destination=$location"
+        } else {
+            //when place ID is available, destination contains place name. The final mapUrl
+            //is constructed using name string & place ID
+            val name = URLEncoder.encode(bookmarkView.name, "utf-8")
+            mapUrl = "https://www.google.com/maps/dir/?api=1" +
+                    "&destination=$name&destination_place_id=" +
+                    "${bookmarkView.placeId}"
+        }
+        //creating sharing Activity Intent & setting action to ACTION_SEND
+        val sendIntent = Intent()
+        sendIntent.action = Intent.ACTION_SEND
+        //multiple types of extra data can be added to the Intent
+        sendIntent.putExtra(Intent.EXTRA_TEXT,
+                "Check out ${bookmarkView.name} at:\n$mapUrl")
+        sendIntent.putExtra(Intent.EXTRA_SUBJECT,
+                "Sharing ${bookmarkView.name}")
+        //setting Intent type to send plain text data
+        sendIntent.type = "text/plain"
+        //starting sharing activity
+        startActivity(sendIntent)
+    }
+
+    private fun setupFab() {
+        databinding.fab.setOnClickListener { sharePlace() }
+    }
 
     companion object {
         private const val REQUEST_CAPTURE_IMAGE = 1

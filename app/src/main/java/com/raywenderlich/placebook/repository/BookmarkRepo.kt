@@ -90,6 +90,11 @@ class BookmarkRepo(context: Context) {
         return bookmarkDao.loadBookmark(bookmarkId)
     }
 
+    fun deleteBookmark(bookmark: Bookmark) {
+        bookmark.deleteImage(context)
+        bookmarkDao.deleteBookmark(bookmark)
+    }
+
     fun getLiveBookmark(bookmarkId: Long): LiveData<Bookmark> =
         bookmarkDao.loadLiveBookmark(bookmarkId)
 

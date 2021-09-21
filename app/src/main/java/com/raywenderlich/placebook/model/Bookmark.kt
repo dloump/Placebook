@@ -4,6 +4,7 @@ import android.content.Context
 import android.graphics.Bitmap
 import androidx.room.Entity
 import androidx.room.PrimaryKey
+import com.raywenderlich.placebook.util.FileUtils
 
 //informing Room this is a database entity class
 @Entity
@@ -32,6 +33,13 @@ data class Bookmark(
                 generateImageFilename(it))
         }
     }
+
+    fun deleteImage(context: Context) {
+        id?.let {
+            FileUtils.deleteFile(context, generateImageFilename(it))
+        }
+    }
+
     //allowing another object to load an image without loading bookmark from database
     companion object {
         fun generateImageFilename(id: Long): String {
