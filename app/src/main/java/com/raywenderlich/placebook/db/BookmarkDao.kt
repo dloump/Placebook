@@ -12,7 +12,7 @@ import com.raywenderlich.placebook.model.Bookmark
 //~U: Update-Update objects in the database
 //~D: Delete. Delete objects in the database
 
-//"telling" Room this is a Data Access Object (DAOs must be: interface or abstract)
+//telling Room this is a Data Access Object (DAOs must be: interface or abstract)
 @Dao
 interface BookmarkDao {
     //defining an SQL statement to read all bookmarks from database & return them as a List
