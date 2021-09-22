@@ -50,8 +50,7 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback {
     private lateinit var map: GoogleMap
     private lateinit var placesClient: PlacesClient
     private lateinit var mMap: GoogleMap
-    private lateinit var fusedLocationClient:
-            FusedLocationProviderClient
+    private lateinit var fusedLocationClient: FusedLocationProviderClient
     private lateinit var binding: ActivityMapsBinding
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -357,14 +356,6 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback {
         updateMapToLocation(location)
     }
 
-    companion object {
-        private const val AUTOCOMPLETE_REQUEST_CODE = 2
-        const val EXTRA_BOOKMARK_ID =
-            "com.raywenderlich.placebook.EXTRA_BOOKMARK_ID"
-        private const val REQUEST_LOCATION = 1
-        private const val TAG = "MapsActivity"
-    }
-
     private fun searchAtCurrentLocation() {
         //defining fields
         val placeFields = listOf(
@@ -450,6 +441,14 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback {
         databinding.mainMapView.progressBar.visibility =
                 ProgressBar.GONE
         enableUserInteraction()
+    }
+
+    companion object {
+        private const val AUTOCOMPLETE_REQUEST_CODE = 2
+        const val EXTRA_BOOKMARK_ID =
+                "com.raywenderlich.placebook.EXTRA_BOOKMARK_ID"
+        private const val REQUEST_LOCATION = 1
+        private const val TAG = "MapsActivity"
     }
 
     class PlaceInfo(val place: Place? = null,
